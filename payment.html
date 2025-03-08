@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Secure Payment - SAM Garage Official</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <style>
+        /* Timeline Progress Bar */
+        .progress-container {
+            width: 100%;
+            background-color: #e0e0e0;
+            border-radius: 10px;
+            height: 8px;
+            margin-top: 10px;
+            position: relative;
+        }
+        .progress-bar {
+            height: 8px;
+            background-color: #ff5733;
+            width: 0%;
+            border-radius: 10px;
+            transition: width 0.5s ease-in-out;
+        }
+    </style>
+</head>
+<body class="bg-gray-100 text-gray-900">
+    
+    <!-- Header -->
+    <header class="bg-blue-900 text-white p-4 flex items-center justify-between shadow-md">
+        <img src="logo.png" alt="SAM Garage Logo" class="h-12">
+        <h1 class="text-xl font-bold">SAM Garage Official - Secure Payment</h1>
+    </header>
+
+    <!-- Payment Container -->
+    <div class="max-w-lg mx-auto my-10 bg-white p-6 rounded-lg shadow-lg text-center">
+        <h1 class="text-2xl font-bold text-blue-800">Complete Your Payment</h1>
+        <p class="mt-2 text-gray-700">Scan the QR code below to pay <span id="price" class="font-bold text-red-600 text-2xl">₹30</span>.</p>
+        
+        <!-- Coupon Code Input -->
+        <div class="mt-4">
+            <input type="text" id="couponCode" class="border p-2 w-3/4 rounded" placeholder="Enter Coupon Code">
+            <button onclick="applyCoupon()" class="bg-green-600 text-white px-4 py-2 rounded ml-2 hover:bg-green-700 transition">
+                Apply
+            </button>
+        </div>
+
+        <!-- QR Code -->
+        <div class="mt-6 flex flex-col items-center">
+            <img id="qrCode" src="qr-code.jpg" alt="QR Code" class="w-40 mx-auto rounded-lg shadow-md">
+            <p class="text-sm text-gray-600 mt-2">Scan the QR code using any UPI app to complete the payment.</p>
+
+            <!-- Timeline Section Below QR Code -->
+            <div class="mt-4 w-full text-sm text-gray-700">
+                <p class="font-semibold text-gray-800">Offer Time Left: <span id="countdown"></span> ⏳</p>
+                <div class="flex justify-between text-xs text-gray-600 mt-1">
+                    <span id="startDate">Start: Loading...</span>
+                    <span>End: 16th March 2025</span>
+                </div>
+                <div class="progress-container">
+                    <div id="progressBar" class="progress-bar"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Payment Instructions -->
+        <div class="mt-6 text-left bg-gray-100 p-4 rounded shadow-sm">
+            <h3 class="text-lg font-semibold text-gray-800">How to Pay?</h3>
+            <ol class="list-decimal ml-5 text-gray-700">
+                <li>Open any UPI-supported app (Google Pay, PhonePe, Paytm, etc.).</li>
+                <li>Tap on the "Scan & Pay" option.</li>
+                <li>Scan the above QR code.</li>
+                <li>Ensure the amount displayed is <span id="amountText" class="font-bold">₹30</span>.</li>
+                <li>Proceed to make the payment.</li>
+                <li>Take a screenshot of the transaction confirmation.</li>
+                <li>Click one of the buttons below to send proof via WhatsApp.</li>
+            </ol>
+        </div>
+
+        <!-- WhatsApp Proof Buttons -->
+        <div class="mt-6 flex flex-col gap-3">
+            <button onclick="sendProof('7621000916')" class="bg-blue-600 text-white px-4 py-2 rounded shadow-lg hover:bg-blue-700 transition">
+                Send Proof via WhatsApp 1
+            </button>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-blue-900 text-white text-center p-4 mt-10 shadow-md">
+        <p>&copy; 2025 SAM Garage Official. All rights reserved.</p>
+    </footer>
+
+    <script>
+        function startCountdown() {
+            const today = new Date();
+            const todayFormatted = today.toLocaleDateString("en-GB", { day: 'numeric', month: 'long', year: 'numeric' });
+            document.getElementById("startDate").textContent = `Start: ${todayFormatted}`;
+
+            const offerEndDate = new Date("March 16, 2025 23:59:59").getTime();
+            const countdownElement = document.getElementById("countdown");
+
+            function updateCountdown() {
+                const now = new Date().getTime();
+                const timeLeft = offerEndDate - now;
+
+                if (timeLeft < 0) {
+                    countdownElement.innerHTML = "Offer Expired ❌";
+                    return;
+                }
+
+                const days = Math.floor(timeLeft / (1000 * 60 * 60 * 24));
+                const hours = Math.floor((timeLeft % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                const minutes = Math.floor((timeLeft % (1000 * 60 * 60)) / (1000 * 60));
+                const seconds = Math.floor((timeLeft % (1000 * 60)) / 1000);
+
+                countdownElement.innerHTML = `${days}d ${hours}h ${minutes}m ${seconds}s`;
+
+                // Update progress bar
+                const startDate = today.getTime();
+                const totalDuration = offerEndDate - startDate;
+                const progress = ((now - startDate) / totalDuration) * 100;
+                document.getElementById("progressBar").style.width = `${progress}%`;
+            }
+
+            updateCountdown();
+            setInterval(updateCountdown, 1000);
+        }
+        startCountdown();
+
+        function applyCoupon() {
+            const couponInput = document.getElementById("couponCode").value.trim();
+            const qrCode = document.getElementById("qrCode");
+            const price = document.getElementById("price");
+            const amountText = document.getElementById("amountText");
+
+            if (couponInput === "OFFER25") {
+                qrCode.src = "coupon.jpg";
+                price.textContent = "₹25";
+                amountText.textContent = "₹25";
+                Swal.fire("Coupon Applied! 🎉", "Your price is now ₹25. Offer valid till 16th March 2025.", "success");
+            } else {
+                Swal.fire("Invalid Coupon ❌", "Please enter a valid coupon code.", "error");
+            }
+        }
+
+        function sendProof(number) {
+            Swal.fire({
+                title: "Payment Completed?",
+                text: "Ensure you have completed the payment before sending proof.",
+                icon: "question",
+                showCancelButton: true,
+                confirmButtonText: "Yes, Send Proof",
+                cancelButtonText: "Cancel"
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    window.location.href = `https://wa.me/91${number}?text=Hello, I have paid ₹${document.getElementById("price").textContent} for the NWKRTC Eicher BS-III Mod. Here is my payment proof.`;
+                }
+            });
+        }
+    </script>
+</body>
+</html>
