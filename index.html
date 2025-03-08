@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SAM Garage Official</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+</head>
+<body class="bg-gray-100 text-gray-900">
+
+    <!-- Pop-up Banner -->
+    
+
+    <!-- Header -->
+    <header class="bg-blue-900 text-white p-4 flex items-center justify-between">
+        <img src="logo.png" alt="SAM Garage Logo" class="h-12">
+        <h1 class="text-xl font-bold">SAM Garage Official</h1>
+    </header>
+
+    <!-- Main Content -->
+    <div class="max-w-6xl mx-auto p-6 bg-white shadow-lg rounded-lg mt-6 grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div class="md:col-span-2">
+            <img src="thumbnail.jpg" alt="Mod Thumbnail" class="w-full rounded">
+            
+            <h2 class="text-2xl font-bold text-blue-800 mt-4">Ashok Leyland BS-6 BMTC Switch Mod</h2>
+            <p class="text-gray-700">Author: <span class="font-semibold">RoadHost</span></p>
+
+            <div class="mt-4">
+                <h3 class="text-lg font-semibold">Silent Features:</h3>
+                <ul class="list-disc ml-5 text-gray-600">
+                    <li>Realistic bus design</li>
+                    <li>High-quality textures</li>
+                    <li>Smooth driving experience</li>
+                </ul>
+            </div>
+
+            <div class="mt-4">
+                <h3 class="text-lg font-semibold">Hero Features:</h3>
+                <ul class="list-disc ml-5 text-gray-600">
+                    <li>Ambient Lighting</li>
+                    <li>Realistic Driving Experience</li>
+                    <li>Photorealistic Mod</li>
+                </ul>
+            </div>
+
+            <div class="mt-6 bg-gray-200 p-4 rounded text-center">
+                <p class="text-gray-600 line-through">Original Price: ₹50</p>
+                <p class="text-2xl font-bold text-red-600">Limited Offer: ₹30</p>
+            </div>
+
+            <div class="mt-4 text-center">
+                <button onclick="openPayment()" class="bg-green-600 text-white px-5 py-2 rounded shadow-lg hover:bg-green-700 transition">
+                    Buy Now
+                </button>
+            </div>
+        </div>
+
+        <div class="md:col-span-1 flex justify-center">
+            
+            <ul class="list-disc ml-5 text-gray-600">
+                <h3 class="text-lg font-semibold">Special Thanks to❤️</h3>
+                <li>livery:.Abi's Livery World</li>
+                <li>3d Model:.Irfaad</li>
+                <li>Conversion:.SAM Garage Official</li>
+                <li>Finance:.ig@rachanna_jatti</li>
+            </ul>
+        </div>
+    </div>
+
+    <footer class="bg-blue-900 text-white text-center p-4 mt-10">
+        <p>&copy; 2025 SAM Garage Official. All rights reserved.</p>
+    </footer>
+
+    <!-- Chatbot Floating Button -->
+    <div id="chat-button" class="fixed bottom-5 right-5 bg-blue-600 text-white px-4 py-3 rounded-full cursor-pointer shadow-lg text-sm font-semibold">
+        💬 Chat with SAM Assist
+    </div>
+
+    <!-- Fullscreen Chatbot -->
+    <div id="chat-box" class="fixed inset-0 bg-white hidden z-50 flex flex-col">
+        <div class="bg-blue-600 text-white p-4 flex justify-between items-center">
+            <span class="font-bold text-lg">SAM Assist</span>
+            <button onclick="closeChat()" class="bg-red-500 px-3 py-1 rounded-full">X</button>
+        </div>
+        <div id="chat-content" class="flex-1 p-4 overflow-y-auto text-sm bg-gray-100">
+            <div class="text-gray-700 mb-2"><strong>Bot:</strong> How can I help you?</div>
+            <div id="chat-options"></div>
+        </div>
+    </div>
+
+    <script>
+        function closePopup() {
+            document.getElementById('popup').style.display = 'none';
+        }
+
+        function openPayment() {
+            Swal.fire({
+                title: "Proceed to Payment",
+                text: "Pay ₹39 using UPI or QR Code",
+                icon: "info",
+                showCancelButton: true,
+                confirmButtonText: "Pay Now",
+                cancelButtonText: "Cancel"
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    window.location.href = "payment.html";
+                }
+            });
+        }
+
+        const faq = {
+            "Can I review this mod on my channel?": "Yes, but please provide proper credits to RoadHost.",
+            "Who is the owner of this mod?": "The mod is created by RoadHost, the owner of Karunadu Mod Developers.",
+            "How do I add this mod to the game?": "Download the mod file and place it inside the Bussid Mod folder on your device.",
+            "How can I buy this mod?": "Click the 'Buy Now' button and complete the payment process.",
+            "What features does this mod have?": "This mod includes Ambient Lighting, Realistic Driving Experience, and Photorealistic Design.",
+            "How do I contact support?": "You can reach out via WhatsApp at +91 7621000916.",
+            "Other Query": "Please describe your issue. We'll get back to you soon."
+        };
+
+        document.getElementById("chat-button").addEventListener("click", function() {
+            document.getElementById("chat-box").classList.remove("hidden");
+            showOptions();
+        });
+
+        function closeChat() {
+            document.getElementById("chat-box").classList.add("hidden");
+        }
+
+        function showOptions() {
+            let chatOptions = document.getElementById("chat-options");
+            chatOptions.innerHTML = ""; 
+
+            for (let question in faq) {
+                let btn = document.createElement("button");
+                btn.innerText = question;
+                btn.className = "block w-full text-left p-3 bg-white my-1 rounded border hover:bg-gray-200";
+                btn.onclick = function() {
+                    answerQuestion(question);
+                };
+                chatOptions.appendChild(btn);
+            }
+        }
+
+        function answerQuestion(question) {
+            let chatContent = document.getElementById("chat-content");
+
+            chatContent.innerHTML += `<div class="text-right text-blue-600 mb-2"><strong>You:</strong> ${question}</div>`;
+            chatContent.innerHTML += `<div id="thinking" class="text-gray-500 italic">Thinking...</div>`;
+
+            setTimeout(() => {
+                document.getElementById("thinking").remove();
+                chatContent.innerHTML += `<div class="text-left text-gray-700 mb-2"><strong>Bot:</strong> ${faq[question]}</div>`;
+
+                if (question === "Other Query") {
+                    chatContent.innerHTML += `
+                        <input id="user-query" type="text" class="w-full border p-2 rounded my-2" placeholder="Describe your issue...">
+                        <button onclick="submitQuery()" class="bg-blue-600 text-white px-3 py-2 rounded">Send</button>
+                    `;
+                } else {
+                    showOptions();
+                }
+
+                chatContent.scrollTop = chatContent.scrollHeight;
+            }, 1000);
+        }
+
+        function submitQuery() {
+            let query = document.getElementById("user-query").value;
+            if (query === "") return;
+            window.open(`https://wa.me/7621000916?text=User Query: ${query}`);
+        }
+    </script>
+
+</body>
+</html>
